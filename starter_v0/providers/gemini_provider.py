@@ -66,6 +66,16 @@ def _function_call_args(call: Any) -> dict[str, Any]:
     return {}
 
 
+FALLBACK_GEMINI_MODELS = [
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+    "gemma-4-31b-it",
+    "gemini-3.5-flash",
+    "gemini-3.7-flash",
+    "gemini-3.8-flash",
+]
+
+
 class GeminiProvider:
     """Google Gemini API provider with normalized tool_calls output."""
 
@@ -73,10 +83,10 @@ class GeminiProvider:
         self,
         *,
         api_key_env: str = "GEMINI_API_KEY",
-        default_model: str = "gemini-3.8-flash",
+        default_model: str = "gemini-3.5-flash-lite",
     ) -> None:
         self.api_key_env = api_key_env
-        self.default_model = default_model
+        self.default_model = os.getenv("GEMINI_MODEL", default_model)
 
     def complete(
         self,
@@ -106,11 +116,27 @@ class GeminiProvider:
             config_kwargs["tools"] = [types.Tool(function_declarations=declarations)]
 
         client = genai.Client(api_key=api_key)
-        resp = client.models.generate_content(
-            model=model or self.default_model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
+        primary_model = model or self.default_model
+        candidate_models = [primary_model, *[m for m in FALLBACK_GEMINI_MODELS if m != primary_model]]
+        last_exc: Exception | None = None
+        resp = None
+        for candidate_model in candidate_models:
+            try:
+                resp = client.models.generate_content(
+                    model=candidate_model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                break
+            except Exception as exc:
+                last_exc = exc
+                msg = str(exc)
+                if any(code in msg for code in ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "500", "INTERNAL")):
+                    continue
+                raise
+        if resp is None:
+            assert last_exc is not None
+            raise last_exc
 
         text_parts: list[str] = []
         calls: list[ToolCall] = []
