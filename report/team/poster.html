@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Research Agent — Nhóm Panda (L3B)</title>
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --acc:#38bdf8; --ok:#4ade80; --warn:#fbbf24; --txt:#e2e8f0; --mut:#94a3b8; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:28px; background:var(--bg); color:var(--txt); font:15px/1.45 system-ui,Segoe UI,Roboto,sans-serif; }
+  h1 { margin:0 0 4px; font-size:30px; } h1 span { color:var(--acc); }
+  .sub { color:var(--mut); margin-bottom:20px; max-width:900px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:12px; }
+  .card { background:var(--card); border-radius:10px; padding:12px 14px; border-left:4px solid var(--acc); }
+  .card.new { border-left-color:var(--ok); } .card.act { border-left-color:var(--warn); }
+  .card b { font-family:ui-monospace,Consolas,monospace; color:var(--acc); } .card.new b { color:var(--ok); } .card.act b { color:var(--warn); }
+  h2 { margin:26px 0 10px; font-size:18px; color:var(--acc); }
+  .tag { font-size:11px; background:#064e3b; color:var(--ok); border-radius:4px; padding:1px 6px; margin-left:6px; }
+  ol li { margin-bottom:6px; } code { background:#0b1220; padding:1px 6px; border-radius:4px; color:#fde68a; }
+  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+  .rules div { background:var(--card); border-radius:10px; padding:12px 14px; }
+  footer { margin-top:24px; color:var(--mut); font-size:13px; }
+</style>
+</head>
+<body>
+<h1>🐼 Panda Research <span>Agent</span> (K5-L3B)</h1>
+<div class="sub">Agent nghiên cứu tiếng Việt của nhóm Panda: tìm tin web, bài đăng X/Twitter, đọc URL, paper arXiv, policy nội bộ, GitHub, Hacker News, Wikipedia — và chỉ gửi Telegram sau khi bạn xác nhận. Thiếu thông tin thì hỏi lại, ngoài phạm vi thì từ chối.</div>
+
+<h2>14 tool (10 tool gốc + 4 tool mới tự phát triển)</h2>
+<div class="grid">
+  <div class="card"><b>clarify</b><br>Hỏi lại khi thiếu thông tin; xin xác nhận yes/no</div>
+  <div class="card"><b>timeline</b><br>Bài đăng gần đây của MỘT tài khoản (handle không @)</div>
+  <div class="card"><b>social_search</b><br>Tìm tweet theo từ khóa (Latest / Top)</div>
+  <div class="card"><b>lookup</b><br>Tìm web / tin tức (topic=news, timeframe)</div>
+  <div class="card"><b>fetch</b><br>Đọc nội dung một URL</div>
+  <div class="card"><b>format</b><br>Digest markdown từ item đã có</div>
+  <div class="card act"><b>send</b><br>Gửi Telegram — chỉ khi confirmed=true</div>
+  <div class="card"><b>policy</b><br>Tra company policy nội bộ</div>
+  <div class="card"><b>papers</b><br>Tìm paper arXiv</div>
+  <div class="card"><b>paper_text</b><br>Đọc text PDF arXiv</div>
+  <div class="card new"><b>hackernews</b><span class="tag">MỚI</span><br>Bài viết &amp; thảo luận Hacker News</div>
+  <div class="card new"><b>github_search</b><span class="tag">MỚI</span><br>Repo GitHub theo sao / cập nhật</div>
+  <div class="card new"><b>wikipedia</b><span class="tag">MỚI</span><br>Tóm tắt Wikipedia (en / vi)</div>
+  <div class="card new"><b>current_time</b><span class="tag">MỚI</span><br>Ngày, giờ, thứ hiện tại (offline)</div>
+</div>
+
+<h2>Câu hỏi mẫu để thử ngay</h2>
+<ol>
+  <li><code>Tin tức AI hôm nay có gì nổi bật?</code> → lookup (news, day)</li>
+  <li><code>Lấy 5 tweet mới nhất của Sam Altman</code> → timeline (sama)</li>
+  <li><code>Tóm tắt 5 tweet mới nhất giúp mình</code> → agent hỏi lại account nào</li>
+  <li><code>Đăng bản tin này lên Telegram</code> → agent xin xác nhận trước</li>
+  <li><code>Repo GitHub nào hay về RAG, nhiều sao nhất?</code> → github_search</li>
+  <li><code>Giải giúp mình nguyên hàm của x^2</code> → từ chối, không gọi tool</li>
+</ol>
+
+<h2>Guardrail &amp; chất lượng</h2>
+<div class="rules">
+  <div><b>Không đoán mò</b><br>Thiếu handle/URL → clarify, không tự chọn tài khoản hay bịa link.</div>
+  <div><b>Xác nhận trước khi gửi</b><br>Prompt bắt clarify yes/no; code chỉ gửi khi <code>confirmed is True</code> (đã vá lỗi chuỗi "false").</div>
+  <div><b>Eval + Unit Test 100%</b><br>Base 20/20 + Group 10/10 + Extension 10/10 PASS; 139 unit test offline, 0 skipped.</div>
+</div>
+
+<footer>Nhóm Panda (L3B) · Link dùng thử (Cloudflare Tunnel): <a href="https://pot-this-matched-adjustment.trycloudflare.com" style="color:var(--acc)">https://pot-this-matched-adjustment.trycloudflare.com</a> · Local: <code>http://localhost:8501</code> · Khởi động: <code>streamlit run app.py</code></footer>
+</body>
+</html>
