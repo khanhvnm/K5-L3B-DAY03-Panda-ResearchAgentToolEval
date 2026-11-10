@@ -6,8 +6,9 @@ from tools._shared import domain
 
 
 def _src(item: dict[str, Any]) -> str:
-    src = item.get("source") or domain(item.get("url", ""))
-    url = item.get("url") or ""
+    # A missing or blank url (None, "", "   ") must not produce an empty link like "[src]( )".
+    url = str(item.get("url") or "").strip()
+    src = item.get("source") or domain(url)
     return f"[{src}]({url})" if url else (src or "")
 
 
@@ -19,7 +20,8 @@ def _bullet(item: dict[str, Any]) -> str:
 
 
 def render_digest(items: list[dict[str, Any]] | None = None, template: str = "sections", headline: str = "") -> dict[str, Any]:
-    items = items or []
+    # Regression fix: models sometimes pass plain strings (or null) instead of item objects.
+    items = [item if isinstance(item, dict) else {"title": str(item)} for item in (items or []) if item is not None]
     if template == "brief":
         markdown = (f"**{headline}**\n\n" if headline else "") + "\n".join(_bullet(item) for item in items[:5])
     elif template == "bullets":
