@@ -1,0 +1,827 @@
+{
+  "run_id": "v3_B_group_gemini_20261110T153621028288",
+  "version": "v3",
+  "artifact_version": "v3+p6ac479ebc767+t27d0eee1478d",
+  "prompt_hash": "6ac479ebc767a6b8fb4f79a9a61191fa76ac9c7c676b81cd1f4a9f9033a73375",
+  "tools_hash": "27d0eee1478d4dd71f7728f05860f2523e9a3229059447c355a7244a727bfcc2",
+  "phase": "B",
+  "suite": "group",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "system_prompt": "artifacts\\versions\\v3\\system_prompt.md",
+  "tools": "artifacts\\versions\\v3\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T15:36:21",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_github_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "route_new_tool_github",
+        "difficulty": "medium",
+        "what_it_tests": "Hỏi repo/open-source -> tool MỚI github_search (sort=stars), không rơi về lookup hay fetch."
+      },
+      "input": "Có repo GitHub nào hay về RAG không? Cho mình vài repo nhiều sao nhất.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "github_search",
+            "args": {
+              "sort": "stars"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "github_search",
+            "args": {
+              "sort": "stars",
+              "query": "RAG"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "github_search",
+          "args": {
+            "sort": "stars",
+            "query": "RAG"
+          },
+          "result": {
+            "tool": "search_github_repos",
+            "query": "RAG",
+            "sort": "stars",
+            "items": [
+              {
+                "title": "langgenius/dify",
+                "url": "https://github.com/langgenius/dify",
+                "source": "github.com",
+                "summary": "Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.",
+                "date": "2026-11-10T08:34:00Z",
+                "metrics": {
+                  "stars": 160812,
+                  "forks": 25433,
+                  "language": "Python"
+                }
+              },
+              {
+                "title": "open-webui/open-webui",
+                "url": "https://github.com/open-webui/open-webui",
+                "source": "github.com",
+                "summary": "User-friendly AI Interface (Supports Ollama, OpenAI API, ...)",
+                "date": "2026-11-10T08:23:27Z",
+                "metrics": {
+                  "stars": 158271,
+                  "forks": 23005,
+                  "language": "Svelte"
+                }
+              },
+              {
+                "title": "langchain-ai/langchain",
+                "url": "https://github.com/langchain-ai/langchain",
+                "source": "github.com",
+                "summary": "The agent engineering platform.",
+                "date": "2026-11-10T08:28:09Z",
+                "metrics": {
+                  "stars": 149292,
+                  "forks": 25101,
+                  "language": "Python"
+                }
+              },
+              {
+                "title": "Graphify-Labs/graphify",
+                "url": "https://github.com/Graphify-Labs/graphify",
+                "source": "github.com",
+                "summary": "Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.",
+                "date": "2026-11-09T17:04:04Z",
+                "metrics": {
+                  "stars": 145225,
+                  "forks": 13907,
+                  "language": "Python"
+                }
+              },
+              {
+                "title": "Shubhamsaboo/awesome-llm-apps",
+                "url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+                "source": "github.com",
+                "summary": "100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.",
+                "date": "2026-11-10T01:54:13Z",
+                "metrics": {
+                  "stars": 144325,
+                  "forks": 21234,
+                  "language": "Python"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_hackernews_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "route_new_tool_hackernews",
+        "difficulty": "medium",
+        "what_it_tests": "Nhắc đích danh Hacker News -> hackernews, không dùng social_search (Twitter) hay lookup."
+      },
+      "input": "Trên Hacker News mọi người đang bàn gì về LLM agents?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "hackernews",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "hackernews",
+            "args": {
+              "query": "LLM agents"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "hackernews",
+          "args": {
+            "query": "LLM agents"
+          },
+          "result": {
+            "tool": "search_hackernews",
+            "query": "LLM agents",
+            "sort_by": "relevance",
+            "items": [
+              {
+                "title": "Hybrid Reasoning Agents: LLM agents that think in latent space, act through text",
+                "url": "https://arxiv.org/abs/2610.18861",
+                "discussion_url": "https://news.ycombinator.com/item?id=50145337",
+                "source": "news.ycombinator.com",
+                "summary": "520 points, 239 comments, by allinonai",
+                "date": "2026-10-18T20:48:14Z",
+                "metrics": {
+                  "points": 520,
+                  "comments": 239
+                }
+              },
+              {
+                "title": "The unreasonable effectiveness of an LLM agent loop with tool use",
+                "url": "https://sketch.dev/blog/agent-loop",
+                "discussion_url": "https://news.ycombinator.com/item?id=43998472",
+                "source": "news.ycombinator.com",
+                "summary": "447 points, 320 comments, by crawshaw",
+                "date": "2025-05-15T19:33:44Z",
+                "metrics": {
+                  "points": 447,
+                  "comments": 320
+                }
+              },
+              {
+                "title": "Claws are now a new layer on top of LLM agents",
+                "url": "https://twitter.com/karpathy/status/2024987174077432126",
+                "discussion_url": "https://news.ycombinator.com/item?id=47096253",
+                "source": "news.ycombinator.com",
+                "summary": "412 points, 941 comments, by Cyphase",
+                "date": "2026-02-21T00:56:29Z",
+                "metrics": {
+                  "points": 412,
+                  "comments": 941
+                }
+              },
+              {
+                "title": "Two things LLM coding agents are still bad at",
+                "url": "https://kix.dev/two-things-llm-coding-agents-are-still-bad-at/",
+                "discussion_url": "https://news.ycombinator.com/item?id=45523537",
+                "source": "news.ycombinator.com",
+                "summary": "345 points, 370 comments, by kixpanganiban",
+                "date": "2025-10-09T04:33:48Z",
+                "metrics": {
+                  "points": 345,
+                  "comments": 370
+                }
+              },
+              {
+                "title": "On Sleeper Agent LLMs",
+                "url": "https://twitter.com/karpathy/status/1745921205020799433",
+                "discussion_url": "https://news.ycombinator.com/item?id=38974802",
+                "source": "news.ycombinator.com",
+                "summary": "312 points, 130 comments, by admp",
+                "date": "2024-01-12T22:10:02Z",
+                "metrics": {
+                  "points": 312,
+                  "comments": 130
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_current_time_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "route_new_tool_current_time",
+        "difficulty": "easy",
+        "what_it_tests": "Hỏi trực tiếp ngày/giờ -> current_time (không phải lookup, không đoán ngày từ trí nhớ)."
+      },
+      "input": "Hôm nay là thứ mấy, ngày bao nhiêu vậy?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "current_time",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "current_time",
+            "args": {}
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "current_time",
+          "args": {},
+          "result": {
+            "tool": "current_time",
+            "utc_offset_hours": 7,
+            "iso": "2026-11-10T15:36:03+07:00",
+            "date": "2026-11-10",
+            "time": "15:36:03",
+            "weekday": "Thứ Ba"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_wikipedia_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "route_new_tool_wikipedia",
+        "difficulty": "easy",
+        "what_it_tests": "Kiến thức nền/định nghĩa có nhắc Wikipedia -> wikipedia với title đúng 'Alan Turing'."
+      },
+      "input": "Cho mình tóm tắt Wikipedia về Alan Turing.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "title": "Alan Turing"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wikipedia",
+            "args": {
+              "title": "Alan Turing",
+              "lang": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wikipedia",
+          "args": {
+            "title": "Alan Turing",
+            "lang": "vi"
+          },
+          "result": {
+            "tool": "wikipedia_summary",
+            "title": "Alan Turing",
+            "lang": "vi",
+            "items": [
+              {
+                "title": "Alan Turing",
+                "url": "https://vi.wikipedia.org/wiki/Alan_Turing",
+                "source": "vi.wikipedia.org",
+                "summary": "Alan Mathison Turing OBE FRS là một nhà toán học, logic học và mật mã học người Anh, được xem là một trong những nhà tiên phong của ngành khoa học máy tính và A.I. Phép thử Turing là một trong những cống hiến lớn nhất của ông trong ngành trí tuệ nhân tạo: thử thách này đặt ra câu hỏi rằng máy móc có khi nào đạt được ý thức và có thể suy nghĩ được hay không. Ông đã hình thức hóa khái niệm thuật toán và tính toán với máy Turing, đồng thời đưa ra phiên bản của \"Turing\", mà ngày nay được đông đảo công chúng chấp nhận, về luận đề Church-Turing, một luận đề nói rằng tất cả những gì tính được bằng thuật toán đều có thể tính được bằng máy Turing.",
+                "description": "nhà toán học người Anh (1912–1954)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_out_of_scope_translation",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_translation",
+        "difficulty": "easy",
+        "what_it_tests": "Dịch thuật không thuộc phạm vi research -> KHÔNG gọi tool nào (kể cả wikipedia/lookup)."
+      },
+      "input": "Dịch giúp mình câu 'Good morning' sang tiếng Pháp.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Mình là trợ lý nghiên cứu và tổng hợp thông tin, hiện tại mình không hỗ trợ dịch thuật các câu thông thường. \n\nBạn có thể nhờ mình tìm kiếm tin tức công nghệ, bài báo khoa học trên arXiv, kho lưu trữ GitHub, thông tin trên Wikipedia, bài đăng trên X/Twitter, hoặc tra cứu các quy định nội bộ của công ty nhé!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "GM01_no_tool_after_thanks",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_no_redo_earlier_request",
+        "difficulty": "hard",
+        "what_it_tests": "Lượt cuối là câu meta -> trả lời thẳng, KHÔNG gọi lại lookup cho lượt 1 và không gọi tool nào."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Ok mình xem rồi, cảm ơn nhé"
+        },
+        {
+          "role": "user",
+          "content": "Mà bạn là ai và có những công cụ nào vậy?"
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Chào bạn, tôi là trợ lý nghiên cứu tiếng Việt của bạn. Tôi được trang bị các công cụ để hỗ trợ bạn tìm kiếm và tổng hợp thông tin, cụ thể:\n\n- **Tìm kiếm tin tức & web:** Tìm kiếm các bài báo, sự kiện mới nhất trên web (`lookup`).\n- **X/Twitter:** Xem bài đăng mới nhất của một tài khoản cụ thể (`timeline`) hoặc tìm kiếm thảo luận theo chủ đề (`social_search`).\n- **Tài liệu học thuật & nguồn mở:** Tìm kiếm các bài báo khoa học trên arXiv (`papers`), đọc nội dung paper (`paper_text`), tìm kho lưu trữ GitHub (`github_search`), thảo luận trên Hacker News (`hackernews`), hoặc lấy thông tin từ Wikipedia (`wikipedia`).\n- **Đọc trang web:** Đọc nội dung chi tiết từ một đường dẫn URL (`fetch`).\n- **Nội bộ công ty:** Tra cứu quy định nội bộ (`policy`).\n- **Đăng tải:** Gửi thông tin lên kênh Telegram của nhóm (sau khi bạn xác nhận).\n\nTôi có thể giúp gì cho bạn trong công việc nghiên cứu hôm nay?",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "GM02_github_sort_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_new_tool_args_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: gom 'mới cập nhật' -> sort=updated (lượt 2) + limit=3 (lượt 3) cho tool github_search."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm giúp mình repo GitHub về RAG"
+        },
+        {
+          "role": "user",
+          "content": "Ưu tiên repo mới cập nhật gần đây thôi"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 3 repo nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "github_search",
+            "args": {
+              "sort": "updated",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "github_search",
+            "args": {
+              "sort": "updated",
+              "query": "RAG",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "github_search",
+          "args": {
+            "sort": "updated",
+            "query": "RAG",
+            "limit": 3
+          },
+          "result": {
+            "tool": "search_github_repos",
+            "query": "RAG",
+            "sort": "updated",
+            "items": [
+              {
+                "title": "Mulhima101/ai-property-assistant",
+                "url": "https://github.com/Mulhima101/ai-property-assistant",
+                "source": "github.com",
+                "summary": "AI Property Assistant for real estate brokers (RAG + tool-calling agent, fake data only)",
+                "date": "2026-11-10T08:36:03Z",
+                "metrics": {
+                  "stars": 0,
+                  "forks": 0,
+                  "language": "Python"
+                }
+              },
+              {
+                "title": "burraq-e-mohammad/autonomous-tech-support-agent-langgraph",
+                "url": "https://github.com/burraq-e-mohammad/autonomous-tech-support-agent-langgraph",
+                "source": "github.com",
+                "summary": "Autonomous IT tech support agent built with LangGraph, Google Gemini, FAISS RAG, and SQLite tools for VPN troubleshooting, ticketing, and account management.",
+                "date": "2026-11-10T08:35:57Z",
+                "metrics": {
+                  "stars": 0,
+                  "forks": 0,
+                  "language": "Jupyter Notebook"
+                }
+              },
+              {
+                "title": "Seom-ingit/Primolix",
+                "url": "https://github.com/Seom-ingit/Primolix",
+                "source": "github.com",
+                "summary": "BM25 sparse retrieval kernel: the index stores invertible primitives (tf/df/dl), scores are derived at query time.",
+                "date": "2026-11-10T08:35:55Z",
+                "metrics": {
+                  "stars": 0,
+                  "forks": 0,
+                  "language": "Python"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM03_clarify_then_handle_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_handle_mapping_no_at",
+        "difficulty": "hard",
+        "what_it_tests": "Thiếu handle ở lượt 1, bổ sung ở lượt 2 -> map Yann LeCun thành 'ylecun' (không @) và limit=4 ở lượt 3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Cho mình xem bài đăng mới nhất trên X"
+        },
+        {
+          "role": "user",
+          "content": "Của Yann LeCun nhé"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 4 bài thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "ylecun",
+              "limit": 4
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "limit": 4,
+              "screenname": "ylecun"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "limit": 4,
+            "screenname": "ylecun"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM04_send_after_user_confirms",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "send_only_after_explicit_confirmation",
+        "difficulty": "hard",
+        "what_it_tests": "Đã có xác nhận rõ ở lượt cuối -> gọi send với confirmed=true (KHÔNG hỏi lại lần nữa). Lưu ý: nếu TELEGRAM_* có trong .env thì tin thật sẽ được gửi khi chạy case này."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi tin 'Họp team lúc 9h sáng mai' lên Telegram giúp mình"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn xác nhận gửi đúng nội dung 'Họp team lúc 9h sáng mai' lên Telegram chứ? (có/không)"
+        },
+        {
+          "role": "user",
+          "content": "Có, mình xác nhận, gửi đi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "confirmed": true
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Họp team lúc 9h sáng mai",
+              "confirmed": true
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Họp team lúc 9h sáng mai",
+            "confirmed": true
+          },
+          "result": {
+            "tool": "send_telegram",
+            "error": "RuntimeError",
+            "message": "Missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "GM05_switch_twitter_to_hackernews",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_to_new_tool",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: user chủ động chuyển nguồn từ Twitter sang Hacker News -> hackernews, KHÔNG gọi social_search."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người nói gì về Claude trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter, xem bên Hacker News đi"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn giữ chủ đề Claude nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "hackernews",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "hackernews",
+            "args": {
+              "query": "Claude"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "hackernews",
+          "args": {
+            "query": "Claude"
+          },
+          "result": {
+            "tool": "search_hackernews",
+            "query": "Claude",
+            "sort_by": "relevance",
+            "items": [
+              {
+                "title": "Claude Fable 5",
+                "url": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+                "discussion_url": "https://news.ycombinator.com/item?id=48463808",
+                "source": "news.ycombinator.com",
+                "summary": "2626 points, 2159 comments, by Philpax",
+                "date": "2026-06-09T16:58:01Z",
+                "metrics": {
+                  "points": 2626,
+                  "comments": 2159
+                }
+              },
+              {
+                "title": "Claude Code is steganographically marking requests",
+                "url": "https://thereallo.dev/blog/claude-code-prompt-steganography",
+                "discussion_url": "https://news.ycombinator.com/item?id=48734373",
+                "source": "news.ycombinator.com",
+                "summary": "2445 points, 750 comments, by kirushik",
+                "date": "2026-06-30T15:44:24Z",
+                "metrics": {
+                  "points": 2445,
+                  "comments": 750
+                }
+              },
+              {
+                "title": "Claude Opus 4.6",
+                "url": "https://www.anthropic.com/news/claude-opus-4-6",
+                "discussion_url": "https://news.ycombinator.com/item?id=46902223",
+                "source": "news.ycombinator.com",
+                "summary": "2346 points, 1031 comments, by HellsMaddy",
+                "date": "2026-02-05T17:38:53Z",
+                "metrics": {
+                  "points": 2346,
+                  "comments": 1031
+                }
+              },
+              {
+                "title": "Claude 3.7 Sonnet and Claude Code",
+                "url": "https://www.anthropic.com/news/claude-3-7-sonnet",
+                "discussion_url": "https://news.ycombinator.com/item?id=43163011",
+                "source": "news.ycombinator.com",
+                "summary": "2127 points, 963 comments, by bakugo",
+                "date": "2025-02-24T18:28:59Z",
+                "metrics": {
+                  "points": 2127,
+                  "comments": 963
+                }
+              },
+              {
+                "title": "Claude Code's source code has been leaked via a map file in their NPM registry",
+                "url": "https://twitter.com/Fried_rice/status/2038894956459290963",
+                "discussion_url": "https://news.ycombinator.com/item?id=47584540",
+                "source": "news.ycombinator.com",
+                "summary": "2095 points, 1022 comments, by treexs",
+                "date": "2026-03-31T09:00:40Z",
+                "metrics": {
+                  "points": 2095,
+                  "comments": 1022
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

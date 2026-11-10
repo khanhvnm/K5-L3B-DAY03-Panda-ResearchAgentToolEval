@@ -1,7 +1,108 @@
 {
-  "dataset_id": "day03_v2_research_group",
+  "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_github_routing",
+      "phase": "B", "suite": "group",
+      "query": "Có repo GitHub nào hay về RAG không? Cho mình vài repo nhiều sao nhất.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "github_search", "args": {"sort": "stars"}}]},
+      "metadata": {"skill": "route_new_tool_github", "difficulty": "medium", "what_it_tests": "Hỏi repo/open-source -> tool MỚI github_search (sort=stars), không rơi về lookup hay fetch."}
+    },
+    {
+      "id": "G02_hackernews_routing",
+      "phase": "B", "suite": "group",
+      "query": "Trên Hacker News mọi người đang bàn gì về LLM agents?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {}}]},
+      "metadata": {"skill": "route_new_tool_hackernews", "difficulty": "medium", "what_it_tests": "Nhắc đích danh Hacker News -> hackernews, không dùng social_search (Twitter) hay lookup."}
+    },
+    {
+      "id": "G03_current_time_routing",
+      "phase": "B", "suite": "group",
+      "query": "Hôm nay là thứ mấy, ngày bao nhiêu vậy?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "current_time", "args": {}}]},
+      "metadata": {"skill": "route_new_tool_current_time", "difficulty": "easy", "what_it_tests": "Hỏi trực tiếp ngày/giờ -> current_time (không phải lookup, không đoán ngày từ trí nhớ)."}
+    },
+    {
+      "id": "G04_wikipedia_routing",
+      "phase": "B", "suite": "group",
+      "query": "Cho mình tóm tắt Wikipedia về Alan Turing.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "wikipedia", "args": {"title": "Alan Turing"}}]},
+      "metadata": {"skill": "route_new_tool_wikipedia", "difficulty": "easy", "what_it_tests": "Kiến thức nền/định nghĩa có nhắc Wikipedia -> wikipedia với title đúng 'Alan Turing'."}
+    },
+    {
+      "id": "G05_out_of_scope_translation",
+      "phase": "B", "suite": "group",
+      "query": "Dịch giúp mình câu 'Good morning' sang tiếng Pháp.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope_translation", "difficulty": "easy", "what_it_tests": "Dịch thuật không thuộc phạm vi research -> KHÔNG gọi tool nào (kể cả wikipedia/lookup)."}
+    },
+    {
+      "id": "GM01_no_tool_after_thanks",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tin AI hôm nay có gì?"},
+        {"role": "user", "content": "Ok mình xem rồi, cảm ơn nhé"},
+        {"role": "user", "content": "Mà bạn là ai và có những công cụ nào vậy?"}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"skill": "multiturn_no_redo_earlier_request", "difficulty": "hard", "what_it_tests": "Lượt cuối là câu meta -> trả lời thẳng, KHÔNG gọi lại lookup cho lượt 1 và không gọi tool nào."}
+    },
+    {
+      "id": "GM02_github_sort_and_limit",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm giúp mình repo GitHub về RAG"},
+        {"role": "user", "content": "Ưu tiên repo mới cập nhật gần đây thôi"},
+        {"role": "user", "content": "Lấy 3 repo nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "github_search", "args": {"sort": "updated", "limit": 3}}]},
+      "metadata": {"skill": "multiturn_new_tool_args_carryover", "difficulty": "hard", "what_it_tests": "3 turns: gom 'mới cập nhật' -> sort=updated (lượt 2) + limit=3 (lượt 3) cho tool github_search."}
+    },
+    {
+      "id": "GM03_clarify_then_handle_limit",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Cho mình xem bài đăng mới nhất trên X"},
+        {"role": "user", "content": "Của Yann LeCun nhé"},
+        {"role": "user", "content": "Lấy 4 bài thôi"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "ylecun", "limit": 4}}]},
+      "metadata": {"skill": "multiturn_handle_mapping_no_at", "difficulty": "hard", "what_it_tests": "Thiếu handle ở lượt 1, bổ sung ở lượt 2 -> map Yann LeCun thành 'ylecun' (không @) và limit=4 ở lượt 3."}
+    },
+    {
+      "id": "GM04_send_after_user_confirms",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Gửi tin 'Họp team lúc 9h sáng mai' lên Telegram giúp mình"},
+        {"role": "assistant", "content": "Bạn xác nhận gửi đúng nội dung 'Họp team lúc 9h sáng mai' lên Telegram chứ? (có/không)"},
+        {"role": "user", "content": "Có, mình xác nhận, gửi đi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "send", "args": {"confirmed": true}}]},
+      "metadata": {"skill": "send_only_after_explicit_confirmation", "difficulty": "hard", "what_it_tests": "Đã có xác nhận rõ ở lượt cuối -> gọi send với confirmed=true (KHÔNG hỏi lại lần nữa). Lưu ý: nếu TELEGRAM_* có trong .env thì tin thật sẽ được gửi khi chạy case này."}
+    },
+    {
+      "id": "GM05_switch_twitter_to_hackernews",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Mọi người nói gì về Claude trên Twitter?"},
+        {"role": "user", "content": "Thôi bỏ Twitter, xem bên Hacker News đi"},
+        {"role": "user", "content": "Vẫn giữ chủ đề Claude nhé"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {}}]},
+      "metadata": {"skill": "multiturn_switch_to_new_tool", "difficulty": "hard", "what_it_tests": "3 turns: user chủ động chuyển nguồn từ Twitter sang Hacker News -> hackernews, KHÔNG gọi social_search."}
+    }
+  ]
 }
